@@ -23,25 +23,14 @@ class Solution(object):
 
 	#verifica solucao, caso alguma coluna da matriz tenha todos elementos menores ou iguais a zero, nao possui solucao
 	def noSolution(self, matrix):
+		if all(i != 0 for i in matrix[1:,0]):
+			for i in range(1, self.colunas):
+				if all(j <= 0 for j in matrix[1:,i]):
+					print("Encontrada coluna com todos elementos negativos: Tableau não possui solução única viável.")
+					print("Abortando")
+					return True
 
-		for i in range(1, self.colunas): #percorre as colunas da matriz
-			allNegative = True
-
-			for j in range(self.linhas): #percorre as linhas de uma coluna
-				if matrix[j][i] >= 0: #se encontrar elemento maior que zero, significa que aquela coluna é valida
-					allNegative = False
-					break
-
-			if(allNegative): #se nao encontrou elemento positivo naquela coluna, aborta.
-				print("Encontrada coluna com todos elementos negativos: Tableau não possui solução.")
-				print("Abortando")
-				return True
-
-
-		# if any(all(i <= 0 for i in matrix[1:,:])) and any(all(i is not 0 for i in matrix[1:,0])):
-		# 	return True
-		# else:
-		# 	return False
+		return False
 
 	#Verifica se dado um Tableau
 	#todos os zj - cj são menores ou iguais a zero, ou seja
@@ -61,10 +50,10 @@ class Solution(object):
 	#existe alguma variável não básica cujo zj-cj = 0
 	def multipleSolution(self, matrix):
 		for i in range(1, self.colunas):
-			if not self.canonico(matrix[:,i]) and matrix[0][i] is 0:
+			if (not self.canonico(matrix[:,i])) and matrix[0][i] == 0:
 				return True
-			else:
-				return False
+			
+		return False
 
 	#Verifica se depois de chegar na ótima, existe alguma variável básica igual a zero
 	def degenerada(self, matrix):

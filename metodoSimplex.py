@@ -106,8 +106,7 @@ class MetodoSimplex(object):
 		passo = 0
 
 		if self.s.noSolution(matrix):
-			print "Tableau fornecido não possui solução viável. \nAbortando."
-			return
+			sys.exit(1)
 
 		if self.s.optimalSolution(matrix):
 			if self.s.multipleSolution(matrix):
