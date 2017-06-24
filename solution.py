@@ -7,7 +7,7 @@ class Solution(object):
 		self.linhas = len(matrix)
 		self.colunas = len(matrix[0])
 
-	#verifica se vetor é canonico
+	#verifica se vetor é canonico (compara com vetor canonico)
 	def canonico(self, vector):
 		#lembrar de transpor matriz
 		temp = np.array(vector)
@@ -21,7 +21,7 @@ class Solution(object):
 
 		return False
 
-	#verifica solucao, caso alguma coluna da matriz tenha todos elementos menores ou iguais a zero, nao possui solucao
+	#verifica solucao, caso alguma coluna da matriz tenha todos elementos menores ou iguais a zero significa que nao possui solucao
 	def noSolution(self, matrix):
 		if all(i != 0 for i in matrix[1:,0]):
 			for i in range(1, self.colunas):
@@ -32,17 +32,16 @@ class Solution(object):
 
 		return False
 
-	#Verifica se dado um Tableau
-	#todos os zj - cj são menores ou iguais a zero, ou seja
-	#se ja é solução otima.
+	#Verifica se se ja é solução otima,
+	#ou seja, se todos os zj - cj são menores ou iguais a zero
 	def optimalSolution(self, matrix):
 		if all(i <= 0 for i in matrix[0,1:]):
 			return True
 		else:
 			return False
 
-	#Verifica se, depois de chegar na solução ótima,
-	#existe alguma variável não básica cujo zj-cj = 0
+	#Verifica se existe alguma variável não básica cujo zj-cj = 0
+	#se houver, significa que há soluções infinitas
 	def multipleSolution(self, matrix):
 		for i in range(1, self.colunas):
 			if (not self.canonico(matrix[:,i])) and matrix[0][i] == 0:
@@ -50,7 +49,8 @@ class Solution(object):
 			
 		return False
 
-	#Verifica se depois de chegar na ótima, existe alguma variável básica igual a zero
+	#Verifica no quadro ótimo existe alguma variável básica igual a zero
+	#significa que solução é degenerada
 	def degenerada(self, matrix):
 		for i in range(1, self.colunas):
 			if self.canonico(matrix[:,i]):
@@ -61,6 +61,7 @@ class Solution(object):
 
 		return False
 
+	#monta os vetores X* e Z*
 	def mountSolution(self, matrix):
 		x = np.zeros(self.colunas -1)
 
@@ -73,6 +74,7 @@ class Solution(object):
 
 		return x, z
 
+	#verifica se array é de variaveis artificiais (nesse caso matrix é i por 1)
 	def artificial(self, matrix):
 		bases = np.eye(self.linhas - 1, dtype=int)
 

@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 import sys
+import os.path
 import numpy as np
 from solution import Solution
 from metodoSimplex import MetodoSimplex
 
 def main(argv):
 	filename = raw_input('Digite o Nome do Arquivo com a Matriz de Entrada: ')
-	#filename = "matriz1.txt"
+
+	if not os.path.exists(filename):
+		print('Arquivo inválido.\nAbortando')
+		sys.exit(1)
+
 	matrix = []
 
 	matrix = np.loadtxt(filename, delimiter = ",")
@@ -24,10 +29,13 @@ def main(argv):
 	matrix = np.array(newmatrix)
 	vb = np.zeros(len(matrix))
 
+	#cria classe MetodoSimplex
 	simplex = MetodoSimplex(matrix)
 
+	#pergunta ao usuario se é duas fases ou nao
 	fases = raw_input('\n1 - Método de Duas fases\n2 - Somente Simplex\nOpção: ')
 
+	#executa duas fases
 	if fases == "1":
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix[1,:] = (-1) * matrix[1,:]
@@ -37,6 +45,7 @@ def main(argv):
 
 		matrix, x, z = simplex.simplex(matrix, vb)
 
+	#executa apenas uma fase	
 	elif fases == "2":
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix, x, z = simplex.simplex(matrix, vb)

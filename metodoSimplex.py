@@ -8,12 +8,13 @@ class MetodoSimplex(object):
 	def __init__(self, matrix):
 		self.s = Solution(matrix)
 
-	#verifica se primeira fase chegou ao fimPrimFase
+	#verifica se primeira fase chegou ao fim 
 	def endFistPhase(self, matrix, zArtif):
 		if all(i <= 0 for i in matrix[0,1:]):
 			if np.array_equal(matrix[0,:],zArtif) and not matrix[0][0] == 0:
 				return True
 
+	#calcula a primeira fase
 	def primeiraFase(self, matrix, vb):
 		print "\nIniciando primeira fase:"
 		print ""
@@ -78,13 +79,14 @@ class MetodoSimplex(object):
 			print "\nTableau - Primeira fase - Passo: ", passo
 			print matrix
 
+		#confere se e possivel continuar para segunda fase
 		if matrix[0][0] != 0:
 			print "Conjunto de soluções é vazio\nAbortando."
 			sys.exit(1)
 
 		return matrix, count, vb
 
-
+	#realiza segunda fase
 	def simplex(self, matrix, vb):
 		print "Iniciando simplex"
 		print "Tableau inicial:"
