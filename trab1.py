@@ -14,7 +14,7 @@ def main(argv):
 
 	matrix = []
 
-	matrix = np.loadtxt(filename, delimiter = ",")
+	matrix = np.loadtxt(filename, delimiter = " ", skiprows = 2)
 
 	#pega o ultimo da lista
 	#apaga o ultimo da lista
@@ -32,21 +32,25 @@ def main(argv):
 	#cria classe MetodoSimplex
 	simplex = MetodoSimplex(matrix)
 
-	#pergunta ao usuario se é duas fases ou nao
-	fases = raw_input('\n1 - Método de Duas fases\n2 - Somente Simplex\nOpção: ')
+	#verifica no arquivo de entrada se é duas fases ou nao
+	with open(filename, 'r') as f:
+		fases = f.readline().rstrip()
 
 	#executa duas fases
-	if fases == "1":
+	if fases == "2":
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix[1,:] = (-1) * matrix[1,:]
 		matrix, count, vb = simplex.primeiraFase(matrix, vb)
 
 		print('\nFim da primeira fase\n')
+		print "Za:", matrix[0], "\n"
+		print "Iniciando Segunda fase:"
 
 		matrix, x, z = simplex.simplex(matrix, vb)
 
 	#executa apenas uma fase	
-	elif fases == "2":
+	elif fases == "1":
+		print "Iniciando simplex..."
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix, x, z = simplex.simplex(matrix, vb)
 

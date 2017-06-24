@@ -9,7 +9,6 @@ class Solution(object):
 
 	#verifica se vetor é canonico (compara com vetor canonico)
 	def canonico(self, vector):
-		#lembrar de transpor matriz
 		temp = np.array(vector)
 		temp = temp.transpose()
 

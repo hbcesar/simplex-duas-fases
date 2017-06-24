@@ -81,14 +81,15 @@ class MetodoSimplex(object):
 
 		#confere se e possivel continuar para segunda fase
 		if matrix[0][0] != 0:
-			print "Conjunto de soluções é vazio\nAbortando."
+			print "Conjunto de soluções é vazio\n"
+			print "Za:", matrix[0], "\n"
+			print "Fim\n"
 			sys.exit(1)
 
 		return matrix, count, vb
 
 	#realiza segunda fase
 	def simplex(self, matrix, vb):
-		print "Iniciando simplex"
 		print "Tableau inicial:"
 		print matrix
 		print ""
@@ -153,7 +154,7 @@ class MetodoSimplex(object):
 						matrix[i, :] = matrix[i, :] - matrix[i][posicaoMaior] * matrix[posicaoMenor, :]
 
 			if self.s.noSolution(matrix):
-				print "Tableau fornecido não possui solução viável. \nAbortando."
+				print "Tableau fornecido não possui solução viável. \nFim."
 				return False
 
 			if self.s.optimalSolution(matrix):
