@@ -5,8 +5,8 @@ from solution import Solution
 from metodoSimplex import MetodoSimplex
 
 def main(argv):
-	#filename = raw_input('Digite o Nome do Arquivo com a Matriz de Entrada: ')
-	filename = "matriz1.txt"
+	filename = raw_input('Digite o Nome do Arquivo com a Matriz de Entrada: ')
+	#filename = "matriz1.txt"
 	matrix = []
 
 	matrix = np.loadtxt(filename, delimiter = ",")
@@ -31,17 +31,18 @@ def main(argv):
 	if fases == "1":
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix[1,:] = (-1) * matrix[1,:]
-		matrix, count, vb, output = simplex.primeiraFase(matrix, vb)
+		matrix, count, vb = simplex.primeiraFase(matrix, vb)
 
 		print('\nFim da primeira fase\n')
 
-		if not output:
-			matrix, x, z = simplex.simplex(matrix, vb)
-		else:
-			return
-	else:
+		matrix, x, z = simplex.simplex(matrix, vb)
+
+	elif fases == "2":
 		matrix[0,:] = (-1) * matrix[0,:]
 		matrix, x, z = simplex.simplex(matrix, vb)
+
+	else:
+		print('Opção inválida')
 
 
 

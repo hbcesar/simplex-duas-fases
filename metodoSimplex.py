@@ -11,13 +11,8 @@ class MetodoSimplex(object):
 	#verifica se primeira fase chegou ao fimPrimFase
 	def endFistPhase(self, matrix, zArtif):
 		if all(i <= 0 for i in matrix[0,1:]):
-			if np.array_equal(matrix[0,:],zArtif):
+			if np.array_equal(matrix[0,:],zArtif) and not matrix[0][0] == 0:
 				return True
-
-			if matrix[0][0] == 0:
-				return False
-			else:
-				return -2
 
 	def primeiraFase(self, matrix, vb):
 		print "\nIniciando primeira fase:"
@@ -32,7 +27,6 @@ class MetodoSimplex(object):
 
 		zArt = matrix[0]
 		count = 0
-		output = True
 		passo = 0
 
 		for i in range(numColunas):
@@ -49,7 +43,6 @@ class MetodoSimplex(object):
 		print ""
 
 		while not self.endFistPhase(matrix, zArt):
-			output = self.endFistPhase(matrix, zArt)
 			posicaoMaior, = np.unravel_index(matrix[0, 1:].argmax(), matrix[0, 1:].shape)
 			posicaoMaior = posicaoMaior + 1 #precisa incrementar, visto que retorna a posicao relativa ao slice
 
@@ -79,19 +72,17 @@ class MetodoSimplex(object):
 			for i in range(len(matrix)):
 				if i != posicaoMenor:
 					if matrix[i][posicaoMaior] != 0:
-						#calcula linhas
-						#TODO: rever como faz o :
 						matrix[i, :] = matrix[i, :] - matrix[i][posicaoMaior] * matrix[posicaoMenor, :]
 
 			passo = passo + 1
 			print "\nTableau - Primeira fase - Passo: ", passo
 			print matrix
 
-		if self.endFistPhase(matrix, zArt) == -2:
-			output = -2
-			print "Conjunto de soluções é vazio"
+		if matrix[0][0] != 0:
+			print "Conjunto de soluções é vazio\nAbortando."
+			sys.exit(1)
 
-		return matrix, count, vb, output
+		return matrix, count, vb
 
 
 	def simplex(self, matrix, vb):

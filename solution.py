@@ -36,11 +36,6 @@ class Solution(object):
 	#todos os zj - cj são menores ou iguais a zero, ou seja
 	#se ja é solução otima.
 	def optimalSolution(self, matrix):
-
-		# for cell in matrix[0][1:]:
-		# 	if cell > 0:
-		# 		return False
-		# return True
 		if all(i <= 0 for i in matrix[0,1:]):
 			return True
 		else:
