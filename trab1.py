@@ -6,7 +6,8 @@ from solution import Solution
 from metodoSimplex import MetodoSimplex
 
 def main(argv):
-	filename = raw_input('Digite o Nome do Arquivo com a Matriz de Entrada: ')
+	#filename = raw_input('Digite o Nome do Arquivo com a Matriz de Entrada: ')
+	filename = "matriz1.txt"
 
 	if not os.path.exists(filename):
 		print('Arquivo inválido.\nAbortando')
@@ -43,12 +44,16 @@ def main(argv):
 		matrix, count, vb = simplex.primeiraFase(matrix, vb)
 
 		print('\nFim da primeira fase\n')
-		print "Za:", matrix[0], "\n"
+		print "Za:", matrix[0][0], "\n"
 		print "Iniciando Segunda fase:"
 
+		#Elimina linhas e colunas das variaveis artificiais
+		matrix = matrix[1:,:-count]
+		simplex = MetodoSimplex(matrix)
 		matrix, x, z = simplex.simplex(matrix, vb)
 
-	#executa apenas uma fase	
+
+	#executa apenas uma fase
 	elif fases == "1":
 		print "Iniciando simplex..."
 		matrix[0,:] = (-1) * matrix[0,:]

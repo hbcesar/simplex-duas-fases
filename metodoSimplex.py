@@ -8,10 +8,10 @@ class MetodoSimplex(object):
 	def __init__(self, matrix):
 		self.s = Solution(matrix)
 
-	#verifica se primeira fase chegou ao fim 
+	#verifica se primeira fase chegou ao fim
 	def endFistPhase(self, matrix, zArtif):
 		if all(i <= 0 for i in matrix[0,1:]):
-			if np.array_equal(matrix[0,:],zArtif) and not matrix[0][0] == 0:
+			if np.array_equal(matrix[0,:],zArtif):
 				return True
 
 	#calcula a primeira fase
@@ -23,18 +23,18 @@ class MetodoSimplex(object):
 		print np.matrix(matrix)
 		print ""
 
-		numLinhas = len(matrix)
-		numColunas = len(matrix[0])
+		numLinhas = len(matrix) - 2
+		numColunas = len(matrix[0]) - 1
 
 		zArt = matrix[0]
 		count = 0
 		passo = 0
 
-		for i in range(numColunas):
+		for i in range(numColunas + 1):
 			if zArt[i] < 0:
 				count += 1
 
-		for i in range(1, numColunas):
+		for i in range(1, numColunas + 1):
 			if self.s.artificial(matrix[:,i].transpose()):
 				posicao, = np.unravel_index(matrix[:, i].argmax(), matrix[:, i].shape)
 				matrix[0,:] = matrix[0,:] + matrix[posicao,:]
@@ -48,27 +48,26 @@ class MetodoSimplex(object):
 			posicaoMaior = posicaoMaior + 1 #precisa incrementar, visto que retorna a posicao relativa ao slice
 
 			#cria um vetor para armazenar divisoes
-			div = np.zeros(numLinhas - 2)
+			div = np.zeros(numLinhas)
+			for i in range(numLinhas):
+				div[i] = float("inf")
 
-			for i in range(2, numLinhas):
+
+			for i in range(2, numLinhas + 2):
 				if matrix[i][posicaoMaior] > 0:
 					div[i-2] = matrix[i][0] / matrix[i][posicaoMaior]
 
 			#Procura menor divisao e guarda linha
-			max = float("inf")
-			posicaoMenor = 0
-			for i in range(len(div)):
-				if div[i] > 0 and div[i] < max:
-					max = div[i]
-					posicaoMenor = i
+			posicaoMenor, = np.unravel_index(div.argmin(), div.shape)
 			posicaoMenor = posicaoMenor + 2
-			
+
 			pivo = matrix[posicaoMenor][posicaoMaior]
 
-			vb[posicaoMenor] = posicaoMaior
+			if pivo == 0:
+				sys.exit(1)
 
 			if pivo != 1:
-				matrix[posicaoMenor, :] = matrix[posicaoMenor, :] / pivo #no codigo da Ana tem um ponto, ve o que means
+				matrix[posicaoMenor, :] = matrix[posicaoMenor, :] / pivo
 
 			for i in range(len(matrix)):
 				if i != posicaoMenor:
@@ -82,7 +81,7 @@ class MetodoSimplex(object):
 		#confere se e possivel continuar para segunda fase
 		if matrix[0][0] != 0:
 			print "Conjunto de soluções é vazio\n"
-			print "Za:", matrix[0], "\n"
+			print "Za:", matrix[0][0]
 			print "Fim\n"
 			sys.exit(1)
 
@@ -124,19 +123,18 @@ class MetodoSimplex(object):
 			posicaoMaior, = np.unravel_index(matrix[0, 1:].argmax(), matrix[0, 1:].shape)
 			posicaoMaior = posicaoMaior + 1 #precisa incrementar, visto que retorna a posicao relativa ao slice
 
+			#cria um vetor para armazenar divisoes
 			div = np.zeros(numLinhas)
+			for i in range(numLinhas):
+				div[i] = float("inf")
 
 			for i in range(1, numLinhas):
 				if matrix[i][posicaoMaior] > 0:
 					div[i-1] = matrix[i][0] / matrix[i][posicaoMaior]
 
 			#Procura o menor da divisao e guarda linhas
-			max = float("inf")
-			posicaoMenor = 0
-			for i in range(len(div)):
-				if div[i] > 0 and div[i] < max:
-					max = div[i]
-					posicaoMenor = i
+			#Procura menor divisao e guarda linha
+			posicaoMenor, = np.unravel_index(div.argmin(), div.shape)
 			posicaoMenor = posicaoMenor + 1
 
 			pivo = matrix[posicaoMenor][posicaoMaior]
@@ -154,8 +152,7 @@ class MetodoSimplex(object):
 						matrix[i, :] = matrix[i, :] - matrix[i][posicaoMaior] * matrix[posicaoMenor, :]
 
 			if self.s.noSolution(matrix):
-				print "Tableau fornecido não possui solução viável. \nFim."
-				return False
+				sys.exit(1)
 
 			if self.s.optimalSolution(matrix):
 				if self.s.multipleSolution(matrix):
@@ -179,4 +176,3 @@ class MetodoSimplex(object):
 				print ""
 
 		return matrix, x, z
-	

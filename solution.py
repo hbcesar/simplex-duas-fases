@@ -22,11 +22,13 @@ class Solution(object):
 
 	#verifica solucao, caso alguma coluna da matriz tenha todos elementos menores ou iguais a zero significa que nao possui solucao
 	def noSolution(self, matrix):
-		if all(i != 0 for i in matrix[1:,0]):
-			for i in range(1, self.colunas):
+		for i in range(1, self.colunas):
+			if matrix[0][i] > 0:
 				if all(j <= 0 for j in matrix[1:,i]):
-					print("Encontrada coluna com todos elementos negativos: Tableau não possui solução única viável.")
-					print("Abortando")
+					print "Tableau não possui solução única viável."
+					print "Encontrada coluna com todos elementos menores ou iguais a zero"
+					print "Z = -inf"
+					print "Abortando"
 					return True
 
 		return False
@@ -45,7 +47,7 @@ class Solution(object):
 		for i in range(1, self.colunas):
 			if (not self.canonico(matrix[:,i])) and matrix[0][i] == 0:
 				return True
-			
+
 		return False
 
 	#Verifica no quadro ótimo existe alguma variável básica igual a zero
